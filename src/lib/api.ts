@@ -7,9 +7,10 @@ function getToken(): string | null {
 
 async function apiFetch<T = unknown>(path: string, options: RequestInit = {}, attempt = 1): Promise<T> {
   const token = getToken();
+  const isPublicAuth = path === '/auth/login' || path === '/auth/register';
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(!isPublicAuth && token ? { Authorization: `Bearer ${token}` } : {}),
     ...(options.headers || {}),
   };
 
@@ -35,10 +36,16 @@ async function apiFetch<T = unknown>(path: string, options: RequestInit = {}, at
   }
 
   if (res.status === 401) {
+    const err = await res.json().catch(() => ({ message: 'Unauthorized' }));
+    if (isPublicAuth) {
+      throw new Error(err.message || 'Invalid email or password');
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.replace('/login');
-    throw new Error('Unauthorized');
+    if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+      window.location.replace('/login');
+    }
+    throw new Error(err.message || 'Unauthorized');
   }
 
   if (!res.ok) {

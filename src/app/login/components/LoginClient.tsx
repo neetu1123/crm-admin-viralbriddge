@@ -21,9 +21,11 @@ export default function LoginClient() {
   const onSubmit = async (data: LoginForm) => {
     setLoading(true);
     try {
-      const result = await authApi.login(data.email, data.password);
-      const role = (result.user.role || '').toLowerCase();
-      if (role !== 'admin' && role !== 'super_admin') {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      const result = await authApi.login(data.email.trim(), data.password);
+      const role = (result.user.role || '').toUpperCase();
+      if (role !== 'ADMIN' && role !== 'SUPER_ADMIN') {
         toast.error('Admin access only. Use an admin account.');
         return;
       }
@@ -80,6 +82,9 @@ export default function LoginClient() {
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
+        <p className="text-xs text-slate-400 text-center mt-6">
+          Use the same admin email/password as the main admin portal.
+        </p>
       </div>
     </div>
   );

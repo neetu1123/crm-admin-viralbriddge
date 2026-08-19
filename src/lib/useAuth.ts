@@ -11,8 +11,8 @@ export interface AuthUser {
 }
 
 function isAdminRole(role?: string): boolean {
-  const r = (role || '').toLowerCase();
-  return r === 'admin' || r === 'super_admin';
+  const r = (role || '').toUpperCase();
+  return r === 'ADMIN' || r === 'SUPER_ADMIN';
 }
 
 export function useAuth() {
