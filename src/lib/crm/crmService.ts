@@ -1,10 +1,16 @@
 import type {
+  AssignmentHistoryEntry,
+  CrmAgent,
   CrmFilters,
   CrmFollowUp,
   CrmLead,
   CrmLeadInput,
   CrmNote,
   CrmSummary,
+  ExportHistoryItem,
+  ImportHistoryItem,
+  ImportPreviewResult,
+  PaginatedLeads,
 } from './types';
 import { crmApi } from '@/src/lib/api';
 import { localCrmStore } from './localCrmStore';
@@ -39,17 +45,72 @@ async function withFallback<T>(apiCall: () => Promise<T>, localCall: () => T | P
   }
 }
 
+function filtersToApiParams(filters: CrmFilters, page?: number, limit?: number) {
+  return {
+    search: filters.search || undefined,
+    leadStatus: filters.leadStatus !== 'all' ? filters.leadStatus : undefined,
+    leadType: filters.leadType !== 'all' ? filters.leadType : undefined,
+    priority: filters.priority !== 'all' ? filters.priority : undefined,
+    assignedToId: filters.assignedToId !== 'all' ? filters.assignedToId : undefined,
+    source: filters.source !== 'all' ? filters.source : undefined,
+    dateFrom: filters.dateFrom || undefined,
+    dateTo: filters.dateTo || undefined,
+    sort: filters.sort,
+    page,
+    limit,
+  };
+}
+
 export const crmService = {
   getAdminUsers: () =>
     withFallback(() => crmApi.getAssignees(), () => localCrmStore.getAdminUsers()),
 
+  getAgents: (activeOnly = false): Promise<CrmAgent[]> =>
+    withFallback(
+      () => crmApi.getAgents(activeOnly),
+      () => localCrmStore.getAdminUsers().map((u) => ({
+        id: u.id,
+        userId: u.id,
+        name: u.name,
+        email: u.email,
+        status: 'ACTIVE' as const,
+        assignedLeads: 0,
+        todaysFollowUps: 0,
+      })),
+    ),
+
   getSummary: (): Promise<CrmSummary> =>
     withFallback(() => crmApi.getSummary(), () => localCrmStore.getSummary()),
 
-  filterLeads: (filters: CrmFilters): Promise<CrmLead[]> =>
+  filterLeads: (filters: CrmFilters, page = 1, limit = 500): Promise<CrmLead[]> =>
     withFallback(
       async () => {
-        const res = await crmApi.getLeads({
+        const res = await crmApi.getLeads({ ...filtersToApiParams(filters), page, limit });
+        return res.data;
+      },
+      () => localCrmStore.filterLeads(filters),
+    ),
+
+  getLeadsPaginated: (filters: CrmFilters, page: number, limit: number): Promise<PaginatedLeads> =>
+    withFallback(
+      () => crmApi.getLeads({ ...filtersToApiParams(filters), page, limit }),
+      async () => {
+        const all = localCrmStore.filterLeads(filters);
+        const start = (page - 1) * limit;
+        return {
+          data: all.slice(start, start + limit),
+          total: all.length,
+          page,
+          limit,
+          totalPages: Math.max(1, Math.ceil(all.length / limit)),
+        };
+      },
+    ),
+
+  getLeadIdsByFilters: (filters: CrmFilters): Promise<string[]> =>
+    withFallback(
+      () =>
+        crmApi.getLeadIdsByFilters({
           search: filters.search || undefined,
           leadStatus: filters.leadStatus !== 'all' ? filters.leadStatus : undefined,
           leadType: filters.leadType !== 'all' ? filters.leadType : undefined,
@@ -58,12 +119,8 @@ export const crmService = {
           source: filters.source !== 'all' ? filters.source : undefined,
           dateFrom: filters.dateFrom || undefined,
           dateTo: filters.dateTo || undefined,
-          sort: filters.sort,
-          limit: 500,
-        });
-        return res.data;
-      },
-      () => localCrmStore.filterLeads(filters),
+        }),
+      () => localCrmStore.filterLeads(filters).map((l) => l.id),
     ),
 
   getLeadById: (id: string): Promise<CrmLead | undefined> =>
@@ -181,6 +238,82 @@ export const crmService = {
       },
       () => localCrmStore.completeFollowUp(leadId, followUpId),
     ),
+
+  bulkAssign: (leadIds: string[], agentId: string) =>
+    withFallback(
+      () => crmApi.bulkAssign(leadIds, agentId),
+      async () => {
+        for (const id of leadIds) {
+          localCrmStore.updateLead(id, { assignedToId: agentId });
+        }
+        return { success: true, count: leadIds.length, assignedTo: 'Agent' };
+      },
+    ),
+
+  bulkAutoAssign: (leadIds: string[]) =>
+    withFallback(() => crmApi.bulkAutoAssign(leadIds), async () => ({ success: true, count: leadIds.length, strategy: 'LOCAL' })),
+
+  bulkUpdate: (leadIds: string[], data: { leadStatus?: string; priority?: string }) =>
+    withFallback(
+      () => crmApi.bulkUpdate(leadIds, data),
+      async () => {
+        for (const id of leadIds) {
+          localCrmStore.updateLead(id, data as Partial<CrmLeadInput>);
+        }
+        return { success: true, count: leadIds.length };
+      },
+    ),
+
+  bulkDelete: (leadIds: string[]) =>
+    withFallback(
+      () => crmApi.bulkDelete(leadIds),
+      async () => {
+        for (const id of leadIds) {
+          localCrmStore.deleteLead(id);
+        }
+        return { success: true, count: leadIds.length };
+      },
+    ),
+
+  assignLead: (leadId: string, agentId: string) =>
+    withFallback(
+      () => crmApi.assignLead(leadId, agentId),
+      async () => {
+        localCrmStore.updateLead(leadId, { assignedToId: agentId });
+        return { success: true, assignedTo: 'Agent' };
+      },
+    ),
+
+  reassignLead: (leadId: string, agentId: string, reason?: string) =>
+    withFallback(
+      () => crmApi.reassignLead(leadId, agentId, reason),
+      async () => {
+        localCrmStore.updateLead(leadId, { assignedToId: agentId });
+        return { success: true, assignedTo: 'Agent' };
+      },
+    ),
+
+  getAssignmentHistory: (leadId: string): Promise<AssignmentHistoryEntry[]> =>
+    withFallback(() => crmApi.getAssignmentHistory(leadId), () => []),
+
+  importPreview: (fileName: string, rows: Record<string, string>[]): Promise<ImportPreviewResult> =>
+    crmApi.importPreview(fileName, rows),
+
+  importConfirm: (importJobId: string, duplicateStrategy?: 'SKIP' | 'UPDATE' | 'IMPORT_AS_NEW') =>
+    crmApi.importConfirm(importJobId, duplicateStrategy),
+
+  getImportHistory: (): Promise<ImportHistoryItem[]> =>
+    withFallback(() => crmApi.getImportHistory(), () => []),
+
+  getImportJob: (importId: string) => crmApi.getImportJob(importId),
+
+  exportLeads: (opts: { leadIds?: string[]; filters?: Record<string, string | undefined>; fields?: string[] }) =>
+    crmApi.exportLeads(opts),
+
+  getExportHistory: (): Promise<ExportHistoryItem[]> =>
+    withFallback(() => crmApi.getExportHistory(), () => []),
+
+  getExportDownload: (exportId: string) => crmApi.getExportDownload(exportId),
 };
 
 export function getLeadFullName(lead: CrmLead): string {

@@ -184,3 +184,79 @@ export interface CrmFilters {
   dateTo: string;
   sort: CrmSortOption;
 }
+
+export interface CrmAgent {
+  id: string;
+  userId: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  phone?: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+  assignedLeads: number;
+  todaysFollowUps: number;
+  lastActivity?: string;
+}
+
+export interface AssignmentHistoryEntry {
+  id: string;
+  previousAgentId?: string;
+  previousAgentName?: string;
+  newAgentId?: string;
+  newAgentName?: string;
+  assignedByName?: string;
+  reason?: string;
+  assignmentType: string;
+  createdAt: string;
+}
+
+export interface ImportPreviewRow {
+  rowNumber: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+  status: 'VALID' | 'WARNING' | 'ERROR' | 'DUPLICATE';
+  errors: string[];
+  warnings: string[];
+}
+
+export interface ImportPreviewResult {
+  importJobId: string;
+  totalRows: number;
+  valid: number;
+  warnings: number;
+  duplicates: number;
+  errors: number;
+  preview: ImportPreviewRow[];
+}
+
+export interface ImportHistoryItem {
+  id: string;
+  fileName: string;
+  importedBy: string;
+  date: string;
+  totalRows: number;
+  imported: number;
+  duplicates: number;
+  failed: number;
+  status: string;
+}
+
+export interface ExportHistoryItem {
+  id: string;
+  fileName: string;
+  requestedBy: string;
+  date: string;
+  recordCount: number;
+  status: string;
+}
+
+export interface PaginatedLeads {
+  data: CrmLead[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}

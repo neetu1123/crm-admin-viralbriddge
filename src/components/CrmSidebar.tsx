@@ -2,13 +2,16 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Plus, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Plus, LogOut, UserCog, FileSpreadsheet, FileDown } from 'lucide-react';
 import { getCurrentUser } from '@/src/lib/useAuth';
 import { logout } from '@/src/lib/auth';
 
 const nav = [
-  { label: 'Dashboard', href: '/crm', icon: LayoutDashboard },
+  { label: 'Dashboard', href: '/crm', icon: LayoutDashboard, exact: true },
   { label: 'New Lead', href: '/crm/new', icon: Plus },
+  { label: 'Agents', href: '/crm/agents', icon: UserCog },
+  { label: 'Import History', href: '/crm/import-history', icon: FileSpreadsheet },
+  { label: 'Export History', href: '/crm/export-history', icon: FileDown },
 ];
 
 export default function CrmSidebar() {
@@ -23,7 +26,9 @@ export default function CrmSidebar() {
       </div>
       <nav className="flex-1 p-3 space-y-1">
         {nav.map((item) => {
-          const active = item.href === '/crm' ? pathname === '/crm' : pathname.startsWith(item.href);
+          const active = item.exact
+            ? pathname === item.href
+            : pathname.startsWith(item.href);
           const Icon = item.icon;
           return (
             <Link

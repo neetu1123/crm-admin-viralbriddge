@@ -35,6 +35,8 @@ import Timeline from '@/src/components/crm/Timeline';
 import NotesPanel from '@/src/components/crm/NotesPanel';
 import FollowUpWidget from '@/src/components/crm/FollowUpWidget';
 import ActivityTimeline from '@/src/components/crm/ActivityTimeline';
+import AssignAgentModal from '@/src/components/crm/AssignAgentModal';
+import type { AssignmentHistoryEntry } from '@/src/lib/crm/types';
 
 type TabId = 'overview' | 'timeline' | 'notes' | 'activities' | 'attachments' | 'communication' | 'followups';
 
@@ -58,12 +60,18 @@ export default function LeadDetailContent({ leadId }: LeadDetailContentProps) {
   const [lead, setLead] = useState<CrmLead | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabId>('overview');
+  const [showReassignModal, setShowReassignModal] = useState(false);
+  const [assignmentHistory, setAssignmentHistory] = useState<AssignmentHistoryEntry[]>([]);
 
   const loadLead = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await crmService.getLeadById(leadId);
+      const [data, history] = await Promise.all([
+        crmService.getLeadById(leadId),
+        crmService.getAssignmentHistory(leadId).catch(() => []),
+      ]);
       setLead(data ?? null);
+      setAssignmentHistory(history);
     } catch {
       setLead(null);
     } finally {
@@ -168,6 +176,9 @@ export default function LeadDetailContent({ leadId }: LeadDetailContentProps) {
             <button type="button" onClick={() => toast.info('Convert to Creator — API integration coming soon')} className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100">
               <UserCheck size={14} /> Convert to Creator
             </button>
+            <button type="button" onClick={() => setShowReassignModal(true)} className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold bg-violet-50 text-violet-700 rounded-lg hover:bg-violet-100">
+              <UserCheck size={14} /> Reassign
+            </button>
             <Link href={`/crm/${lead.id}/edit`} className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200">
               <Pencil size={14} /> Edit
             </Link>
@@ -250,6 +261,24 @@ export default function LeadDetailContent({ leadId }: LeadDetailContentProps) {
                   <div className="flex flex-wrap gap-2">
                     {lead.tags.map((tag) => (
                       <span key={tag} className="text-xs bg-violet-50 text-violet-700 px-2.5 py-1 rounded-full">{tag}</span>
+                    ))}
+                  </div>
+                </InfoCard>
+              )}
+              {assignmentHistory.length > 0 && (
+                <InfoCard title="Assignment History">
+                  <div className="space-y-3">
+                    {assignmentHistory.map((entry) => (
+                      <div key={entry.id} className="text-sm border-l-2 border-violet-200 pl-3">
+                        <p className="text-slate-800">
+                          {entry.previousAgentName ? `${entry.previousAgentName} → ` : ''}
+                          {entry.newAgentName ?? 'Unassigned'}
+                        </p>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {entry.assignmentType.replace(/_/g, ' ')} · {entry.assignedByName ?? 'System'} · {formatLeadDate(entry.createdAt)}
+                        </p>
+                        {entry.reason && <p className="text-xs text-slate-500 italic mt-0.5">{entry.reason}</p>}
+                      </div>
                     ))}
                   </div>
                 </InfoCard>
@@ -365,6 +394,24 @@ export default function LeadDetailContent({ leadId }: LeadDetailContentProps) {
           </div>
         )}
       </div>
+
+      <AssignAgentModal
+        open={showReassignModal}
+        onClose={() => setShowReassignModal(false)}
+        title="Reassign Lead"
+        leadCount={1}
+        onConfirm={async (agentId) => {
+          const reason = prompt('Reason for reassignment (optional):') ?? undefined;
+          try {
+            const result = await crmService.reassignLead(lead.id, agentId, reason);
+            toast.success(`Reassigned to ${result.assignedTo}`);
+            loadLead();
+          } catch (err) {
+            toast.error(err instanceof Error ? err.message : 'Reassignment failed');
+            throw err;
+          }
+        }}
+      />
     </div>
   );
 }

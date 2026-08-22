@@ -158,4 +158,106 @@ export const crmApi = {
     apiFetch(`/admin/crm/leads/${leadId}/follow-ups/${followUpId}/complete`, {
       method: 'PATCH',
     }),
+
+  getAgents: (activeOnly = false) =>
+    apiFetch<import('@/src/lib/crm/types').CrmAgent[]>(
+      `/admin/crm/agents${activeOnly ? '?activeOnly=true' : ''}`,
+    ),
+
+  getAgentWorkload: (userId: string) =>
+    apiFetch<{ userId: string; name: string; email: string; status: string; assignedLeads: number; todaysFollowUps: number }>(
+      `/admin/crm/agents/${userId}/workload`,
+    ),
+
+  bulkAssign: (leadIds: string[], agentId: string) =>
+    apiFetch<{ success: boolean; count: number; assignedTo: string }>('/admin/crm/leads/bulk-assign', {
+      method: 'POST',
+      body: JSON.stringify({ leadIds, agentId }),
+    }),
+
+  bulkAutoAssign: (leadIds: string[]) =>
+    apiFetch<{ success: boolean; count: number; strategy: string }>('/admin/crm/leads/bulk-auto-assign', {
+      method: 'POST',
+      body: JSON.stringify({ leadIds }),
+    }),
+
+  bulkUpdate: (leadIds: string[], data: { leadStatus?: string; priority?: string; tags?: string[] }) =>
+    apiFetch<{ success: boolean; count: number }>('/admin/crm/leads/bulk-update', {
+      method: 'POST',
+      body: JSON.stringify({ leadIds, ...data }),
+    }),
+
+  bulkDelete: (leadIds: string[]) =>
+    apiFetch<{ success: boolean; count: number }>('/admin/crm/leads/bulk-delete', {
+      method: 'POST',
+      body: JSON.stringify({ leadIds }),
+    }),
+
+  assignLead: (leadId: string, agentId: string) =>
+    apiFetch<{ success: boolean; assignedTo: string }>(`/admin/crm/leads/${leadId}/assign`, {
+      method: 'POST',
+      body: JSON.stringify({ agentId }),
+    }),
+
+  reassignLead: (leadId: string, agentId: string, reason?: string) =>
+    apiFetch<{ success: boolean; assignedTo: string }>(`/admin/crm/leads/${leadId}/reassign`, {
+      method: 'POST',
+      body: JSON.stringify({ agentId, reason }),
+    }),
+
+  getAssignmentHistory: (leadId: string) =>
+    apiFetch<import('@/src/lib/crm/types').AssignmentHistoryEntry[]>(
+      `/admin/crm/leads/${leadId}/assignment-history`,
+    ),
+
+  importPreview: (fileName: string, rows: Record<string, string>[]) =>
+    apiFetch<import('@/src/lib/crm/types').ImportPreviewResult>('/admin/crm/leads/import/preview', {
+      method: 'POST',
+      body: JSON.stringify({ fileName, rows }),
+    }),
+
+  importConfirm: (importJobId: string, duplicateStrategy?: 'SKIP' | 'UPDATE' | 'IMPORT_AS_NEW') =>
+    apiFetch<{ importJobId: string; imported: number; duplicates: number; failed: number; status: string }>(
+      '/admin/crm/leads/import/confirm',
+      { method: 'POST', body: JSON.stringify({ importJobId, duplicateStrategy }) },
+    ),
+
+  getImportHistory: () =>
+    apiFetch<import('@/src/lib/crm/types').ImportHistoryItem[]>('/admin/crm/import-history'),
+
+  getImportJob: (importId: string) =>
+    apiFetch<{
+      id: string;
+      fileName: string;
+      uploadedBy: string;
+      uploadedDate: string;
+      completedAt?: string;
+      totalRecords: number;
+      successfulRecords: number;
+      duplicateRecords: number;
+      failedRecords: number;
+      status: string;
+      errors: Array<{ rowNumber: number; error: string; suggestedFix?: string }>;
+    }>(`/admin/crm/import/${importId}`),
+
+  getImportErrorsCsv: (importId: string) =>
+    apiFetch<string>(`/admin/crm/import/${importId}/errors`),
+
+  exportLeads: (opts: { leadIds?: string[]; filters?: Record<string, string | undefined>; fields?: string[] }) =>
+    apiFetch<{ exportJobId: string; recordCount: number; csv: string }>('/admin/crm/leads/export', {
+      method: 'POST',
+      body: JSON.stringify(opts),
+    }),
+
+  getExportHistory: () =>
+    apiFetch<import('@/src/lib/crm/types').ExportHistoryItem[]>('/admin/crm/export-history'),
+
+  getExportDownload: (exportId: string) =>
+    apiFetch<{ fileName: string; csv: string }>(`/admin/crm/export/${exportId}/download`),
+
+  getLeadIdsByFilters: (filters: Record<string, string | undefined>) =>
+    apiFetch<string[]>('/admin/crm/leads/filter-ids', {
+      method: 'POST',
+      body: JSON.stringify(filters),
+    }),
 };
