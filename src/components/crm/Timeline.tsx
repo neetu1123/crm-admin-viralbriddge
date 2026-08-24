@@ -66,10 +66,10 @@ export default function Timeline({ events }: TimelineProps) {
               </div>
               {!isLast && <div className="w-px flex-1 bg-slate-200 my-1 min-h-[24px]" />}
             </div>
-            <div className={`pb-5 ${isLast ? 'pb-0' : ''}`}>
-              <p className="text-sm font-medium text-slate-800">{event.title}</p>
+            <div className={`pb-5 min-w-0 ${isLast ? 'pb-0' : ''}`}>
+              <p className="text-sm font-medium text-slate-800 break-words">{event.title}</p>
               {event.description && (
-                <p className="text-xs text-slate-500 mt-0.5">{event.description}</p>
+                <p className="text-xs text-slate-500 mt-0.5 break-words">{event.description}</p>
               )}
               <p className="text-xs text-slate-400 mt-1">
                 {formatLeadDate(event.createdAt)}

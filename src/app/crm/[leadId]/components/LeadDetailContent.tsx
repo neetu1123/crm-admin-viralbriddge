@@ -137,15 +137,14 @@ export default function LeadDetailContent({ leadId }: LeadDetailContentProps) {
 
       <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 mb-6 animate-fade-in">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-          <div className="flex items-start gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-violet-100 text-violet-700 flex items-center justify-center text-lg font-bold flex-shrink-0">
+          <div className="flex items-start gap-3 sm:gap-4 min-w-0">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-violet-100 text-violet-700 flex items-center justify-center text-lg font-bold flex-shrink-0">
               {initials}
             </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-slate-800">{getLeadFullName(lead)}</h1>
+            <div className="min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-800 break-words">{getLeadFullName(lead)}</h1>
               <p className="text-sm text-slate-500 flex items-center gap-1 mt-0.5">
-                <Building2 size={14} /> {lead.company}
-                {lead.jobTitle ? ` · ${lead.jobTitle}` : ''}
+                <Building2 size={14} className="shrink-0" /> <span className="break-words">{lead.company}{lead.jobTitle ? ` · ${lead.jobTitle}` : ''}</span>
               </p>
               <div className="flex flex-wrap gap-2 mt-2">
                 <LeadStatusBadge status={lead.leadStatus} />
@@ -192,7 +191,7 @@ export default function LeadDetailContent({ leadId }: LeadDetailContentProps) {
         </div>
       </div>
 
-      <div className="flex gap-1 overflow-x-auto mb-6 pb-1 border-b border-slate-200">
+      <div className="flex gap-1 overflow-x-auto mb-6 pb-1 border-b border-slate-200 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -341,10 +340,10 @@ export default function LeadDetailContent({ leadId }: LeadDetailContentProps) {
             ) : (
               <div className="divide-y divide-slate-100">
                 {lead.attachments.map((att) => (
-                  <div key={att.id} className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50">
-                    <FileText size={18} className="text-violet-500" />
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-slate-800">{att.name}</p>
+                  <div key={att.id} className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 min-w-0">
+                    <FileText size={18} className="text-violet-500 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-slate-800 truncate">{att.name}</p>
                       <p className="text-xs text-slate-400">{att.size} · {formatLeadDate(att.uploadedAt)}</p>
                     </div>
                   </div>
@@ -437,15 +436,15 @@ function InfoRow({
   href?: string;
 }) {
   return (
-    <div className="flex items-start gap-2 text-sm">
+    <div className="flex items-start gap-2 text-sm min-w-0">
       {Icon && <Icon size={14} className="text-slate-400 mt-0.5 flex-shrink-0" />}
-      <span className="text-slate-500 min-w-[100px]">{label}</span>
+      <span className="text-slate-500 min-w-[72px] sm:min-w-[100px] shrink-0">{label}</span>
       {href ? (
-        <a href={href} target="_blank" rel="noopener noreferrer" className="text-violet-600 hover:underline break-all">
+        <a href={href} target="_blank" rel="noopener noreferrer" className="text-violet-600 hover:underline break-all min-w-0">
           {value}
         </a>
       ) : (
-        <span className="text-slate-800 break-all">{value}</span>
+        <span className="text-slate-800 break-all min-w-0">{value}</span>
       )}
     </div>
   );

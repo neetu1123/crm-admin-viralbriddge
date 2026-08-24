@@ -22,12 +22,12 @@ export default function ImportHistoryContent() {
 
   return (
     <div className="pb-8">
-      <div className="flex items-center gap-3 mb-6">
-        <Link href="/crm" className="p-2 rounded-lg hover:bg-slate-100 text-slate-500">
+      <div className="flex items-center gap-3 mb-6 min-w-0">
+        <Link href="/crm" className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 shrink-0">
           <ArrowLeft size={18} />
         </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">Import History</h1>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800">Import History</h1>
           <p className="text-slate-500 text-sm mt-0.5">Past lead import jobs</p>
         </div>
       </div>
@@ -43,7 +43,8 @@ export default function ImportHistoryContent() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[560px]">
             <thead className="bg-slate-50 border-b border-slate-100">
               <tr>
                 <th className="text-left px-4 py-3 font-semibold text-slate-600">File</th>
@@ -57,7 +58,7 @@ export default function ImportHistoryContent() {
               {items.map((item) => (
                 <tr key={item.id} className="border-b border-slate-50 hover:bg-slate-50/50">
                   <td className="px-4 py-3">
-                    <Link href={`/crm/import-history/${item.id}`} className="font-medium text-violet-600 hover:underline">
+                    <Link href={`/crm/import-history/${item.id}`} className="font-medium text-violet-600 hover:underline break-all">
                       {item.fileName}
                     </Link>
                   </td>
@@ -73,6 +74,7 @@ export default function ImportHistoryContent() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

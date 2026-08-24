@@ -42,11 +42,11 @@ export default function LoginClient() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F8F7FC] px-4">
+    <div className="min-h-dvh flex items-center justify-center bg-[#F8F7FC] px-4 py-8">
       <Toaster position="top-right" richColors />
-      <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-lg p-8">
+      <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-lg p-6 sm:p-8">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-slate-900">ViralBridge CRM</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">ViralBridge CRM</h1>
           <p className="text-sm text-slate-500 mt-1">Sign in with your admin account</p>
         </div>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

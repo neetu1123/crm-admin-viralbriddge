@@ -33,9 +33,9 @@ export default function BulkActionBar({
   if (selectedCount === 0) return null;
 
   return (
-    <div className="sticky bottom-4 z-20 mx-auto max-w-4xl">
-      <div className="flex flex-wrap items-center gap-2 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-lg">
-        <span className="text-sm font-medium mr-2">
+    <div className="sticky bottom-3 sm:bottom-4 z-20 mx-auto max-w-4xl px-0">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 bg-slate-900 text-white px-3 sm:px-4 py-3 rounded-2xl shadow-lg">
+        <span className="text-sm font-medium sm:mr-2">
           {selectAllMatching && totalMatching
             ? `All ${totalMatching} matching leads selected`
             : `${selectedCount} selected`}
@@ -45,13 +45,13 @@ export default function BulkActionBar({
           <button
             type="button"
             onClick={onSelectAllMatching}
-            className="text-xs text-violet-300 hover:text-violet-200 underline mr-2"
+            className="text-xs text-violet-300 hover:text-violet-200 underline sm:mr-2 text-left"
           >
             Select all {totalMatching} matching
           </button>
         )}
 
-        <div className="flex flex-wrap gap-1.5 ml-auto">
+        <div className="flex flex-wrap gap-1.5 sm:ml-auto">
           <ActionBtn icon={UserPlus} label="Assign" onClick={onAssign} />
           <ActionBtn icon={Zap} label="Auto Assign" onClick={onAutoAssign} />
           <ActionBtn icon={RefreshCw} label="Status" onClick={onChangeStatus} />

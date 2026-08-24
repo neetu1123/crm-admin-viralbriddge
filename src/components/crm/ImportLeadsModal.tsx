@@ -76,8 +76,8 @@ export default function ImportLeadsModal({ open, onClose, onSuccess }: ImportLea
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/40">
+      <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 shrink-0">
           <h2 className="font-semibold text-slate-800">Import Leads</h2>
           <button type="button" onClick={handleClose} className="p-1.5 rounded-lg hover:bg-slate-100">
@@ -95,7 +95,7 @@ export default function ImportLeadsModal({ open, onClose, onSuccess }: ImportLea
               >
                 <Download size={16} /> Download CSV template
               </button>
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-10 cursor-pointer hover:border-violet-400 hover:bg-violet-50/30 transition-colors">
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-6 sm:p-10 cursor-pointer hover:border-violet-400 hover:bg-violet-50/30 transition-colors">
                 <Upload size={32} className="text-slate-400 mb-3" />
                 <p className="text-sm font-medium text-slate-700">Drop CSV file or click to browse</p>
                 <p className="text-xs text-slate-500 mt-1">Supports .csv files</p>
@@ -122,7 +122,7 @@ export default function ImportLeadsModal({ open, onClose, onSuccess }: ImportLea
               <p className="text-sm text-slate-600">
                 File: <span className="font-medium">{fileName}</span>
               </p>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <StatBox label="Valid" value={preview.valid} color="text-emerald-600" />
                 <StatBox label="Warnings" value={preview.warnings} color="text-amber-600" />
                 <StatBox label="Duplicates" value={preview.duplicates} color="text-blue-600" />
@@ -142,8 +142,8 @@ export default function ImportLeadsModal({ open, onClose, onSuccess }: ImportLea
                 </select>
               </div>
 
-              <div className="border border-slate-200 rounded-xl overflow-hidden max-h-48 overflow-y-auto">
-                <table className="w-full text-xs">
+              <div className="border border-slate-200 rounded-xl overflow-hidden max-h-48 overflow-auto">
+                <table className="w-full text-xs min-w-[360px]">
                   <thead className="bg-slate-50 sticky top-0">
                     <tr>
                       <th className="px-3 py-2 text-left">Row</th>
@@ -177,7 +177,7 @@ export default function ImportLeadsModal({ open, onClose, onSuccess }: ImportLea
         </div>
 
         {step === 'preview' && preview && (
-          <div className="flex gap-2 px-5 py-4 border-t border-slate-100 shrink-0">
+          <div className="flex flex-col-reverse sm:flex-row gap-2 px-5 py-4 border-t border-slate-100 shrink-0">
             <button
               type="button"
               onClick={() => { setStep('upload'); setPreview(null); }}
@@ -189,7 +189,7 @@ export default function ImportLeadsModal({ open, onClose, onSuccess }: ImportLea
               type="button"
               onClick={() => void handleConfirm()}
               disabled={loading || preview.valid + preview.warnings + preview.duplicates === 0}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-violet-600 rounded-xl hover:bg-violet-700 disabled:opacity-50"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-violet-600 rounded-xl hover:bg-violet-700 disabled:opacity-50 text-center"
             >
               {loading ? 'Importing…' : `Confirm Import (${preview.valid + preview.warnings + preview.duplicates} rows)`}
             </button>

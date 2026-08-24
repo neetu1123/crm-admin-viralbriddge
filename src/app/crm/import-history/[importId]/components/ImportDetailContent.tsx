@@ -57,12 +57,12 @@ export default function ImportDetailContent({ importId }: ImportDetailContentPro
 
   return (
     <div className="pb-8">
-      <div className="flex items-center gap-3 mb-6">
-        <Link href="/crm/import-history" className="p-2 rounded-lg hover:bg-slate-100 text-slate-500">
+      <div className="flex items-center gap-3 mb-6 min-w-0">
+        <Link href="/crm/import-history" className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 shrink-0">
           <ArrowLeft size={18} />
         </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">{job.fileName}</h1>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800 break-all">{job.fileName}</h1>
           <p className="text-slate-500 text-sm mt-0.5">
             Uploaded by {job.uploadedBy} · {formatLeadDate(job.uploadedDate)}
           </p>
@@ -78,7 +78,7 @@ export default function ImportDetailContent({ importId }: ImportDetailContentPro
 
       {job.errors.length > 0 && (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 py-3 border-b border-slate-100">
             <h2 className="font-semibold text-slate-800">Errors ({job.errors.length})</h2>
             <button
               type="button"
@@ -88,8 +88,8 @@ export default function ImportDetailContent({ importId }: ImportDetailContentPro
               <Download size={14} /> Download CSV
             </button>
           </div>
-          <div className="max-h-96 overflow-y-auto">
-            <table className="w-full text-sm">
+          <div className="max-h-96 overflow-auto">
+            <table className="w-full text-sm min-w-[480px]">
               <thead className="bg-slate-50 sticky top-0">
                 <tr>
                   <th className="text-left px-4 py-2 font-medium text-slate-600">Row</th>

@@ -83,8 +83,8 @@ export default function NotesPanel({ notes, onAdd, onEdit, onDelete }: NotesPane
                 </div>
               ) : (
                 <>
-                  <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{note.content}</p>
-                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                  <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap break-words">{note.content}</p>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-3 pt-3 border-t border-slate-100">
                     <p className="text-xs text-slate-400">
                       {note.createdBy} · {formatLeadDate(note.createdAt)}
                       {note.updatedAt ? ' (edited)' : ''}

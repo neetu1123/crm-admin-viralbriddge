@@ -91,8 +91,8 @@ export default function ExportLeadsModal({
       : 'All matching leads';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/40">
+      <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
           <div>
             <h2 className="font-semibold text-slate-800">Export Leads</h2>
@@ -120,7 +120,7 @@ export default function ExportLeadsModal({
           </div>
         </div>
 
-        <div className="flex gap-2 px-5 py-4 border-t border-slate-100">
+        <div className="flex flex-col-reverse sm:flex-row gap-2 px-5 py-4 border-t border-slate-100">
           <button
             type="button"
             onClick={onClose}

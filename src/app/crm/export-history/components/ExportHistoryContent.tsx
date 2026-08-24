@@ -31,12 +31,12 @@ export default function ExportHistoryContent() {
 
   return (
     <div className="pb-8">
-      <div className="flex items-center gap-3 mb-6">
-        <Link href="/crm" className="p-2 rounded-lg hover:bg-slate-100 text-slate-500">
+      <div className="flex items-center gap-3 mb-6 min-w-0">
+        <Link href="/crm" className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 shrink-0">
           <ArrowLeft size={18} />
         </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">Export History</h1>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800">Export History</h1>
           <p className="text-slate-500 text-sm mt-0.5">Past lead export jobs</p>
         </div>
       </div>
@@ -52,7 +52,8 @@ export default function ExportHistoryContent() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[520px]">
             <thead className="bg-slate-50 border-b border-slate-100">
               <tr>
                 <th className="text-left px-4 py-3 font-semibold text-slate-600">File</th>
@@ -65,7 +66,7 @@ export default function ExportHistoryContent() {
             <tbody>
               {items.map((item) => (
                 <tr key={item.id} className="border-b border-slate-50 hover:bg-slate-50/50">
-                  <td className="px-4 py-3 font-medium text-slate-800">{item.fileName}</td>
+                  <td className="px-4 py-3 font-medium text-slate-800 max-w-[160px] sm:max-w-none truncate">{item.fileName}</td>
                   <td className="px-4 py-3 text-slate-600 hidden md:table-cell">{item.requestedBy}</td>
                   <td className="px-4 py-3 text-slate-500">{formatLeadDate(item.date)}</td>
                   <td className="px-4 py-3 text-slate-600">{item.recordCount}</td>
@@ -82,6 +83,7 @@ export default function ExportHistoryContent() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

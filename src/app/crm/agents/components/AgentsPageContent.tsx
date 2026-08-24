@@ -21,12 +21,12 @@ export default function AgentsPageContent() {
 
   return (
     <div className="pb-8">
-      <div className="flex items-center gap-3 mb-6">
-        <Link href="/crm" className="p-2 rounded-lg hover:bg-slate-100 text-slate-500">
+      <div className="flex items-center gap-3 mb-6 min-w-0">
+        <Link href="/crm" className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 shrink-0">
           <ArrowLeft size={18} />
         </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">CRM Agents</h1>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800">CRM Agents</h1>
           <p className="text-slate-500 text-sm mt-0.5">Active agents and workload overview</p>
         </div>
       </div>

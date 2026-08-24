@@ -288,22 +288,22 @@ export default function CrmDashboardContent() {
       <Toaster position="bottom-right" richColors />
 
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">CRM</h1>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800">CRM</h1>
           <p className="text-slate-500 text-sm mt-1">Manage leads, follow-ups, and customer relationships</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={() => setShowImportModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium border border-slate-200 rounded-xl hover:bg-slate-50"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium border border-slate-200 rounded-xl hover:bg-slate-50"
           >
             <Upload size={16} /> Import
           </button>
           <button
             type="button"
             onClick={() => setShowExportModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium border border-slate-200 rounded-xl hover:bg-slate-50"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium border border-slate-200 rounded-xl hover:bg-slate-50"
           >
             <Download size={16} /> Export
           </button>
@@ -321,22 +321,22 @@ export default function CrmDashboardContent() {
         {summaryCards.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm animate-fade-in">
+            <div key={stat.label} className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 shadow-sm animate-fade-in">
               <div className="flex items-center gap-2 mb-2">
                 <div className={`p-1.5 rounded-lg ${stat.bg}`}>
                   <Icon size={14} className={stat.color} />
                 </div>
                 <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide leading-tight">{stat.label}</p>
               </div>
-              <p className={`text-2xl font-bold tabular-nums ${stat.color}`}>{stat.value}</p>
+              <p className={`text-xl sm:text-2xl font-bold tabular-nums ${stat.color}`}>{stat.value}</p>
             </div>
           );
         })}
       </div>
 
-      <div className="sticky top-0 z-10 bg-slate-50/95 backdrop-blur-sm -mx-4 px-4 py-3 mb-4 border-b border-slate-200">
+      <div className="sticky top-0 z-10 bg-slate-50/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 xl:-mx-10 xl:px-10 py-3 mb-4 border-b border-slate-200">
         <div className="flex flex-col lg:flex-row gap-3">
-          <div className="relative flex-1 min-w-[200px]">
+          <div className="relative flex-1 min-w-0">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
@@ -346,11 +346,11 @@ export default function CrmDashboardContent() {
               className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
             />
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
             <select
               value={filters.leadStatus}
               onChange={(e) => setFilters((f) => ({ ...f, leadStatus: e.target.value as CrmFilters['leadStatus'] }))}
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+              className="min-w-0 w-full sm:w-auto text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
             >
               <option value="all">All Status</option>
               {LEAD_STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -358,7 +358,7 @@ export default function CrmDashboardContent() {
             <select
               value={filters.leadType}
               onChange={(e) => setFilters((f) => ({ ...f, leadType: e.target.value as CrmFilters['leadType'] }))}
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+              className="min-w-0 w-full sm:w-auto text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
             >
               <option value="all">All Types</option>
               {LEAD_TYPE_OPTIONS.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -366,7 +366,7 @@ export default function CrmDashboardContent() {
             <select
               value={filters.priority}
               onChange={(e) => setFilters((f) => ({ ...f, priority: e.target.value as CrmFilters['priority'] }))}
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+              className="min-w-0 w-full sm:w-auto text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
             >
               <option value="all">All Priority</option>
               {PRIORITY_OPTIONS.map((p) => <option key={p} value={p}>{p}</option>)}
@@ -374,7 +374,7 @@ export default function CrmDashboardContent() {
             <select
               value={filters.assignedToId}
               onChange={(e) => setFilters((f) => ({ ...f, assignedToId: e.target.value }))}
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+              className="min-w-0 w-full sm:w-auto text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
             >
               <option value="all">All Assignees</option>
               {agents.map((a) => <option key={a.userId} value={a.userId}>{a.name}</option>)}
@@ -382,7 +382,7 @@ export default function CrmDashboardContent() {
             <select
               value={filters.source}
               onChange={(e) => setFilters((f) => ({ ...f, source: e.target.value as CrmFilters['source'] }))}
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+              className="min-w-0 w-full sm:w-auto text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
             >
               <option value="all">All Sources</option>
               {LEAD_SOURCE_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -391,20 +391,20 @@ export default function CrmDashboardContent() {
               type="date"
               value={filters.dateFrom}
               onChange={(e) => setFilters((f) => ({ ...f, dateFrom: e.target.value }))}
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+              className="min-w-0 w-full sm:w-auto text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
               title="From date"
             />
             <input
               type="date"
               value={filters.dateTo}
               onChange={(e) => setFilters((f) => ({ ...f, dateTo: e.target.value }))}
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+              className="min-w-0 w-full sm:w-auto text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
               title="To date"
             />
             <select
               value={filters.sort}
               onChange={(e) => setFilters((f) => ({ ...f, sort: e.target.value as CrmFilters['sort'] }))}
-              className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+              className="min-w-0 w-full sm:w-auto text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
             >
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>
@@ -422,8 +422,61 @@ export default function CrmDashboardContent() {
           <CrmEmptyState />
         ) : (
           <>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="md:hidden divide-y divide-slate-100">
+              <div className="flex items-center gap-2 px-4 py-3 bg-slate-50/80">
+                <input
+                  type="checkbox"
+                  checked={allPageSelected}
+                  onChange={toggleSelectPage}
+                  className="rounded text-violet-600"
+                  aria-label="Select all on page"
+                />
+                <span className="text-xs font-semibold text-slate-600">Select page</span>
+              </div>
+              {leads.map((lead) => {
+                const initials = `${lead.firstName[0] ?? ''}${lead.lastName[0] ?? ''}`.toUpperCase();
+                const checked = selectAllMatching || selectedIds.has(lead.id);
+                return (
+                  <div key={lead.id} className="p-4 animate-fade-in">
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleSelect(lead.id)}
+                        className="mt-2 rounded text-violet-600 shrink-0"
+                      />
+                      <div className="w-9 h-9 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center text-xs font-bold shrink-0">
+                        {initials}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <Link href={`/crm/${lead.id}`} className="font-medium text-slate-800 hover:text-violet-600 break-words">
+                          {getLeadFullName(lead)}
+                        </Link>
+                        <p className="text-xs text-slate-500 mt-0.5 truncate">{lead.company}</p>
+                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                          <LeadStatusBadge status={lead.leadStatus} />
+                          <PriorityBadge priority={lead.priority} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-end gap-1 mt-3 pl-8">
+                      <Link href={`/crm/${lead.id}`} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500" aria-label="View">
+                        <Eye size={15} />
+                      </Link>
+                      <Link href={`/crm/${lead.id}/edit`} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500" aria-label="Edit">
+                        <Pencil size={15} />
+                      </Link>
+                      <button type="button" onClick={() => handleDelete(lead)} className="p-1.5 rounded-lg hover:bg-red-50 text-red-500" aria-label="Delete">
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm min-w-[720px]">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50/80">
                     <th className="px-4 py-3 w-10">
@@ -502,7 +555,7 @@ export default function CrmDashboardContent() {
               </table>
             </div>
 
-            <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 py-3 border-t border-slate-100">
               <p className="text-xs text-slate-500">
                 Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, total)} of {total}
               </p>

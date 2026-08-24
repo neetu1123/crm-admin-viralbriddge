@@ -313,11 +313,11 @@ export default function LeadForm({
         </div>
       </Section>
 
-      <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+      <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-4 border-t border-slate-200">
         <button
           type="submit"
           disabled={saving}
-          className="px-5 py-2.5 text-sm font-semibold bg-violet-600 text-white rounded-lg hover:bg-violet-700 disabled:opacity-50 transition-colors"
+          className="w-full sm:w-auto px-5 py-2.5 text-sm font-semibold bg-violet-600 text-white rounded-lg hover:bg-violet-700 disabled:opacity-50 transition-colors"
         >
           {saving ? 'Saving...' : submitLabel}
         </button>

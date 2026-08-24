@@ -51,8 +51,8 @@ export default function AssignAgentModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/40">
+      <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
           <div>
             <h2 className="font-semibold text-slate-800">{title}</h2>
@@ -95,7 +95,7 @@ export default function AssignAgentModal({
                     <p className="font-medium text-sm text-slate-800">{agent.name}</p>
                     <p className="text-xs text-slate-500 truncate">{agent.email}</p>
                   </div>
-                  <div className="text-right text-xs text-slate-500">
+                  <div className="text-right text-xs text-slate-500 shrink-0">
                     <p>{agent.assignedLeads} leads</p>
                     <p>{agent.todaysFollowUps} today</p>
                   </div>
@@ -105,7 +105,7 @@ export default function AssignAgentModal({
           )}
         </div>
 
-        <div className="flex gap-2 px-5 py-4 border-t border-slate-100">
+        <div className="flex flex-col-reverse sm:flex-row gap-2 px-5 py-4 border-t border-slate-100">
           <button
             type="button"
             onClick={onClose}

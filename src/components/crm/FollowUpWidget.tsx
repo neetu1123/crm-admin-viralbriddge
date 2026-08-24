@@ -81,7 +81,7 @@ export default function FollowUpWidget({ followUps, onAdd, onComplete }: FollowU
             placeholder="Follow-up title"
             className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30"
           />
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30" />
             <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/30" />
           </div>
@@ -108,11 +108,11 @@ export default function FollowUpWidget({ followUps, onAdd, onComplete }: FollowU
             const Icon = config.icon;
             return (
               <div key={fu.id} className="flex items-start gap-3 bg-white border border-slate-200 rounded-xl p-4 animate-fade-in">
-                <div className={`p-2 rounded-lg border ${config.className}`}>
+                <div className={`p-2 rounded-lg border shrink-0 ${config.className}`}>
                   <Icon size={16} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-800">{fu.title}</p>
+                  <p className="text-sm font-medium text-slate-800 break-words">{fu.title}</p>
                   <p className="text-xs text-slate-500 mt-0.5">
                     {formatLeadDate(fu.date)} at {fu.time}
                   </p>

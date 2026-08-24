@@ -31,16 +31,16 @@ export default function ActivityTimeline({ events }: ActivityTimelineProps) {
   return (
     <div className="divide-y divide-slate-100 border border-slate-200 rounded-xl overflow-hidden bg-white">
       {activityEvents.map((event) => (
-        <div key={event.id} className="flex items-center justify-between px-4 py-3 hover:bg-slate-50 transition-colors animate-fade-in">
-          <div>
+        <div key={event.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 px-4 py-3 hover:bg-slate-50 transition-colors animate-fade-in">
+          <div className="min-w-0">
             <p className="text-sm font-medium text-slate-800">
               {activityLabels[event.type] ?? event.title}
             </p>
             {event.description && (
-              <p className="text-xs text-slate-500 mt-0.5">{event.description}</p>
+              <p className="text-xs text-slate-500 mt-0.5 break-words">{event.description}</p>
             )}
           </div>
-          <div className="text-right flex-shrink-0 ml-4">
+          <div className="sm:text-right flex-shrink-0 sm:ml-4">
             <p className="text-xs text-slate-400">{formatLeadDate(event.createdAt)}</p>
             {event.createdBy && (
               <p className="text-xs text-slate-400">{event.createdBy}</p>
